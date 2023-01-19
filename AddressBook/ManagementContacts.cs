@@ -12,8 +12,6 @@ namespace AddressBook
         public List<Contacts> AddContacts = new List<Contacts>();
         public void AddNewContact(Contacts NewContact)
         {
-            NewContact.ValidateContacts();
-
             AddContacts.Add(NewContact);
         }
 
@@ -24,7 +22,7 @@ namespace AddressBook
                 Console.WriteLine("ID Number: " + Line.ID);
                 Console.WriteLine("Name: " + Line.Name);
                 Console.WriteLine("Address: " + Line.Address);
-                Console.WriteLine("Email: " + Line.Email);
+                Console.WriteLine("Email: " + Line.Email.EmailAddress);
                 Console.WriteLine("Mobile Phone: " + Line.CellPhoneNumber);
                 Console.WriteLine("Home Phone: " + Line.HomePhoneNumber);
                 Console.WriteLine("Company Phone: " + Line.CompanyPhoneNumber);

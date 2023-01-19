@@ -15,7 +15,6 @@ namespace AddressBook
             Console.WriteLine("|   Happy Address Book  |");
             Console.WriteLine("|-----------------------|");
             Console.WriteLine(" ");
-
         }
         public void WriteText()
         {
@@ -37,7 +36,7 @@ namespace AddressBook
         }
         public int CalculateID(ManagementContacts Access)
         {
-            int LastID =  Access.AddContacts.Count + 1;
+            int LastID = (Access.AddContacts[Access.AddContacts.Count -1].ID) + 1;
 
             return LastID;
         }
@@ -52,12 +51,10 @@ namespace AddressBook
 
                 foreach (string Line in ReadTxt)
                 {
-                    Contacts AccessContacts = new Contacts();
-
                     string[] BreakTxt = Line.Split(";");
                     int NumberID = Convert.ToInt32(BreakTxt[0]);
 
-                    AccessContacts.Initialize(NumberID, BreakTxt[1], BreakTxt[2], BreakTxt[3], BreakTxt[4], BreakTxt[5],BreakTxt[6]);
+                    Contacts AccessContacts = new Contacts(NumberID, BreakTxt[1], BreakTxt[2], BreakTxt[3], BreakTxt[4], BreakTxt[5], BreakTxt[6]);
 
                     AccessMC.AddNewContact(AccessContacts);
                 }
@@ -71,7 +68,7 @@ namespace AddressBook
 
             foreach(Contacts Line in WriteContact)
             {
-                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email + ";" + Line.CellPhoneNumber + ";" + Line.HomePhoneNumber + ";" + Line.CompanyPhoneNumber);
+                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress + ";" + Line.CellPhoneNumber + ";" + Line.HomePhoneNumber + ";" + Line.CompanyPhoneNumber);
                 WriteFile.Add(LineActual);
             }
 
@@ -96,31 +93,29 @@ namespace AddressBook
                 {
                     WriteNameCompany();
 
-                    Contacts AccessContacts = new Contacts();
-
                     Console.Write("Please type the Name + Last Name: ");
-                    AccessContacts.Name = (Console.ReadLine());
+                    string Name = (Console.ReadLine());
 
                     Console.Write("Please type the Address: ");
-                    AccessContacts.Address= Console.ReadLine();
+                    string Address= Console.ReadLine();
 
                     Console.Write("Please type the Email: ");
-                    AccessContacts.Email= Console.ReadLine();
+                    string Email= Console.ReadLine();
 
                     Console.Write("Please type the Mobile Phone Number: ");
-                    AccessContacts.CellPhoneNumber= Console.ReadLine();
+                    string CellPhoneNumber= Console.ReadLine();
 
                     Console.Write("Please type the Home Phone Number: ");
-                    AccessContacts.HomePhoneNumber = Console.ReadLine();
+                    string HomePhoneNumber = Console.ReadLine();
 
                     Console.Write("Please type the Company Phone Number: ");
-                    AccessContacts.CompanyPhoneNumber = Console.ReadLine();
+                    string CompanyPhoneNumber = Console.ReadLine();
 
                     int NumberID = CalculateID(AccessMC);
 
                     try
                     {
-                        AccessContacts.Initialize(NumberID, AccessContacts.Name, AccessContacts.Address, AccessContacts.Email, AccessContacts.CellPhoneNumber, AccessContacts.HomePhoneNumber, AccessContacts.CompanyPhoneNumber);
+                        Contacts AccessContacts = new Contacts(NumberID, Name, Address, Email, CellPhoneNumber, HomePhoneNumber, CompanyPhoneNumber);
                         AccessMC.AddNewContact(AccessContacts);
                     }
                     catch(Exception ex) 
@@ -137,11 +132,12 @@ namespace AddressBook
                 }
                 if(Choose == "3")
                 {
+                    WriteNameCompany();
                     Console.Write("Please, type the ID: ");
-                    string Email = Console.ReadLine();
-                    int EmailInt = Convert.ToInt32(Email);
+                    string ID = Console.ReadLine();
+                    int IDInt = Convert.ToInt32(ID);
 
-                    AccessMC.RemoveContacts(EmailInt);
+                    AccessMC.RemoveContacts(IDInt);
                     ExitMessage();
                 }
                 if(Choose == "4")
@@ -151,9 +147,5 @@ namespace AddressBook
                 }
             }
         }
-
-
-
-
     }
 }
