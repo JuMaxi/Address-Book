@@ -47,7 +47,8 @@ namespace AddressBook
             if ((Address.Length == 0)
                 && (CellPhoneNumber.Length == 0)
                 && (HomePhoneNumber.Length == 0)
-                && (CompanyPhoneNumber.Length == 0))
+                && (CompanyPhoneNumber.Length == 0)
+                && (Email.EmailAddress.Length == 0))
             {
                 Console.WriteLine(" ");
                 throw new Exception("You need to put at least one field more to complet this registration");

@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -36,7 +40,7 @@ namespace AddressBook
         }
         public int CalculateID(ManagementContacts Access)
         {
-            int LastID = (Access.AddContacts[Access.AddContacts.Count -1].ID) + 1;
+            int LastID = (Access.AddContacts[Access.AddContacts.Count - 1].ID) + 1;
 
             return LastID;
         }
@@ -60,19 +64,80 @@ namespace AddressBook
                 }
             }
         }
-            
+
         public void WriteFile(List<Contacts> WriteContact)
         {
             string Path = @"C:\Dev\AddressBook\AddressBook\database.csv";
             List<string> WriteFile = new List<string>();
 
-            foreach(Contacts Line in WriteContact)
+            foreach (Contacts Line in WriteContact)
             {
                 string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress + ";" + Line.CellPhoneNumber + ";" + Line.HomePhoneNumber + ";" + Line.CompanyPhoneNumber);
                 WriteFile.Add(LineActual);
             }
 
-           File.WriteAllLines(Path, WriteFile);
+            File.WriteAllLines(Path, WriteFile);
+        }
+        public void WriteOptionsPhone()
+        {
+            WriteNameCompany();
+
+            Console.WriteLine("What Kind of Phone do you want to insert? ");
+            Console.WriteLine("A) Mobile Phone: ");
+            Console.WriteLine("B) Home Phone: ");
+            Console.WriteLine("C) Bussness Phone: ");
+            Console.WriteLine("D) Exit: ");
+            Console.Write("--> ");
+        }
+        public Dictionary<char, string> ReadOptionsPhone(char KindPhone, Dictionary<char, string> OptionsPhone)
+        {
+            if (KindPhone == 'A' || KindPhone == 'B' || KindPhone == 'C')
+            {
+                if (OptionsPhone.ContainsKey(KindPhone))
+                {
+                    Console.Write("You have already inserted this kind of number phone. Do you want to change? Y/N: ");
+                    string ToChange = Console.ReadLine();
+
+                    if (ToChange == "Y")
+                    {
+                        Console.WriteLine(" ");
+                        Console.Write("Please, type the number phone: ");
+                        string Phone = Console.ReadLine();
+
+                        OptionsPhone[KindPhone] = Phone;
+
+                        Console.WriteLine(" ");
+                        Console.WriteLine("Registry changed.");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine(" ");
+                    Console.Write("Please, type the number phone: ");
+                    string Phone = Console.ReadLine();
+                    OptionsPhone.Add(KindPhone, Phone);
+                }
+                ExitMessage();
+            }
+
+            return OptionsPhone;
+        }
+
+        public Dictionary<char, string> ReturnCompletCount(Dictionary<char, string> OptionsPhone)
+        {
+            if (OptionsPhone.Count < 3)
+            {
+                string teste1 = "ABC";
+
+                for (int Position = 0; Position < teste1.Length; Position++)
+                {
+                    if (OptionsPhone.ContainsKey(teste1[Position]) == false)
+                    {
+                        OptionsPhone.Add(teste1[Position], "Null");
+                    }
+                }
+            }
+            return OptionsPhone;
         }
 
         bool ExitContacts = false;
@@ -89,7 +154,7 @@ namespace AddressBook
 
                 Console.Clear();
 
-                if(Choose == "1")
+                if (Choose == "1")
                 {
                     WriteNameCompany();
 
@@ -97,40 +162,49 @@ namespace AddressBook
                     string Name = (Console.ReadLine());
 
                     Console.Write("Please type the Address: ");
-                    string Address= Console.ReadLine();
+                    string Address = Console.ReadLine();
 
                     Console.Write("Please type the Email: ");
-                    string Email= Console.ReadLine();
+                    string Email = Console.ReadLine();
+                    Console.Clear();
 
-                    Console.Write("Please type the Mobile Phone Number: ");
-                    string CellPhoneNumber= Console.ReadLine();
+                    char KindPhone = ' ';
+                    Dictionary<char, string> OptionsPhone = new Dictionary<char, string>();
 
-                    Console.Write("Please type the Home Phone Number: ");
-                    string HomePhoneNumber = Console.ReadLine();
+                    while (KindPhone != 'D')
+                    {
+                        WriteOptionsPhone();
+                        Console.WriteLine(" ");
 
-                    Console.Write("Please type the Company Phone Number: ");
-                    string CompanyPhoneNumber = Console.ReadLine();
+                        string KindPhoneString = Console.ReadLine();
+                        KindPhoneString = KindPhoneString.ToUpper();
+                        KindPhone = Convert.ToChar(KindPhoneString);
+
+                        OptionsPhone = (ReadOptionsPhone(KindPhone, OptionsPhone));
+                    }
+
+                    ReturnCompletCount(OptionsPhone);
 
                     int NumberID = CalculateID(AccessMC);
 
                     try
                     {
-                        Contacts AccessContacts = new Contacts(NumberID, Name, Address, Email, CellPhoneNumber, HomePhoneNumber, CompanyPhoneNumber);
+                        Contacts AccessContacts = new Contacts(NumberID, Name, Address, Email, OptionsPhone['A'], OptionsPhone['B'], OptionsPhone['C']);
                         AccessMC.AddNewContact(AccessContacts);
                     }
-                    catch(Exception ex) 
+                    catch (Exception ex)
                     {
                         Console.WriteLine("Something is wrong. Check the error message: " + ex.Message);
                     }
 
                     ExitMessage();
                 }
-                if(Choose == "2")
+                if (Choose == "2")
                 {
                     AccessMC.ShowContacts();
                     ExitMessage();
                 }
-                if(Choose == "3")
+                if (Choose == "3")
                 {
                     WriteNameCompany();
                     Console.Write("Please, type the ID: ");
@@ -140,7 +214,7 @@ namespace AddressBook
                     AccessMC.RemoveContacts(IDInt);
                     ExitMessage();
                 }
-                if(Choose == "4")
+                if (Choose == "4")
                 {
                     WriteFile(AccessMC.AddContacts);
                     ExitContacts = true;

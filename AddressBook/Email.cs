@@ -10,38 +10,44 @@ namespace AddressBook
     {
         public string EmailAddress;
 
-        public Email(string Email) 
-        { 
-            EmailAddress= Email;
+        public Email(string Email)
+        {
+            EmailAddress = Email;
 
             ValidateEmail(EmailAddress);
         }
 
         public void ValidateEmail(string Email)
         {
-            bool ValidEmail = false;
-
-            if ((Email.Length > 0)
-               && (Email.IndexOf(" ") < 0)
-               && (Email.IndexOf("@") >= 0))
+            if (Email.Length > 0)
             {
-                int Check = Email.IndexOf("@");
+                bool ValideEmail = false;
 
-                for (int Position = Check + 2; Position < Email.Length; Position++)
+                if (Email.IndexOf("@") > 0)
                 {
-                    if (Email[Position] == 46)
+                    int Check = Email.IndexOf("@");
+
+                    for (int Position = Check + 2; Position < Email.Length; Position++)
                     {
-                        if (Position != (Email.Length - 1))
+                        if (Position < Email.Length)
                         {
-                            ValidEmail = true;
+                            if (Email[Position] == 46)
+                            {
+                                if (Position != (Email.Length - 1))
+                                {
+                                    ValideEmail = true;
+                                }
+                            }
                         }
                     }
                 }
-            }
-            if (ValidEmail == false)
-            {
-                throw new Exception("This email is invalid. Put a valid email to continue this registry.");
+                if ((Email.IndexOf(" ") > 0)
+                || (ValideEmail == false))
+                {
+                    throw new Exception("This email is invalid. Put a valid email to continue this registry.");
+                }
             }
         }
     }
 }
+
