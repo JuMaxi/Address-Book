@@ -18,6 +18,7 @@ namespace AddressBook
         public void ShowContacts()
         {
             Menu Access = new Menu();
+
             Access.WriteNameCompany();
 
             foreach (Contacts Line in AddContacts)
@@ -26,9 +27,9 @@ namespace AddressBook
                 Console.WriteLine("Name: " + Line.Name);
                 Console.WriteLine("Address: " + Line.Address);
                 Console.WriteLine("Email: " + Line.Email.EmailAddress);
-                Console.WriteLine("Mobile Phone: " + Line.CellPhoneNumber);
-                Console.WriteLine("Home Phone: " + Line.HomePhoneNumber);
-                Console.WriteLine("Company Phone: " + Line.CompanyPhoneNumber);
+                Console.WriteLine("Mobile Phone: " + Line.Phone.MobilePhone);
+                Console.WriteLine("Home Phone: " + Line.Phone.HomePhone);
+                Console.WriteLine("Company Phone: " + Line.Phone.BusinessPhone);
                 Console.WriteLine(" ");
             }
         }

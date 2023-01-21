@@ -11,22 +11,19 @@ namespace AddressBook
         public string Name;
         public string Address;
         public Email Email;
-        public string CellPhoneNumber;
-        public string HomePhoneNumber;
-        public string CompanyPhoneNumber;
+        public Phones Phone;
         public int ID;
 
-        public Contacts(int NumberID, string NamePerson, string AddressPerson, string EmailPerson, string MPhonePerson, string HPhonePerson, string CPhonePerson)
+        public Contacts(int NumberID, string NamePerson, string AddressPerson, string EmailPerson, string PhoneA, string PhoneB, string PhoneC)
         {
             Email EmailValidate = new Email(EmailPerson);
+            Phones PhonesReturn = new Phones(PhoneA, PhoneB, PhoneC);
 
             ID = NumberID;
             Name = NamePerson;
             Address = AddressPerson;
             Email = EmailValidate;
-            CellPhoneNumber = MPhonePerson;
-            HomePhoneNumber = HPhonePerson;
-            CompanyPhoneNumber = CPhonePerson;
+            Phone = PhonesReturn;
 
             ValidateContacts();
         }
@@ -45,9 +42,9 @@ namespace AddressBook
                 throw new Exception("This field is Mandatory. You need to put the Name + Last Name for to complet this registration.");
             }
             if ((Address.Length == 0)
-                && (CellPhoneNumber.Length == 0)
-                && (HomePhoneNumber.Length == 0)
-                && (CompanyPhoneNumber.Length == 0)
+                && (Phone.MobilePhone.Length == 0)
+                && (Phone.HomePhone.Length == 0)
+                && (Phone.BusinessPhone.Length == 0)
                 && (Email.EmailAddress.Length == 0))
             {
                 Console.WriteLine(" ");

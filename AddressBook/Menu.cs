@@ -13,6 +13,8 @@ namespace AddressBook
 {
     public class Menu
     {
+        public Dictionary<char, string> OptionsPhone = new Dictionary<char, string>();
+
         public void WriteNameCompany()
         {
             Console.WriteLine("|-----------------------|");
@@ -81,76 +83,16 @@ namespace AddressBook
 
             foreach (Contacts Line in WriteContact)
             {
-                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress + ";" + Line.CellPhoneNumber + ";" + Line.HomePhoneNumber + ";" + Line.CompanyPhoneNumber);
+                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress + ";" + Line.Phone.MobilePhone + ";" + Line.Phone.HomePhone + ";" + Line.Phone.BusinessPhone);
                 WriteFile.Add(LineActual);
             }
 
             File.WriteAllLines(Path, WriteFile);
         }
-        public void WriteOptionsPhone()
-        {
-            WriteNameCompany();
-
-            Console.WriteLine("What Kind of Phone do you want to insert? ");
-            Console.WriteLine("A) Mobile Phone: ");
-            Console.WriteLine("B) Home Phone: ");
-            Console.WriteLine("C) Business Phone: ");
-            Console.WriteLine("D) Exit: ");
-            Console.Write("--> ");
-        }
-        public Dictionary<char, string> ReadOptionsPhone(char KindPhone, Dictionary<char, string> OptionsPhone)
-        {
-            if (KindPhone == 'A' || KindPhone == 'B' || KindPhone == 'C')
-            {
-                if (OptionsPhone.ContainsKey(KindPhone))
-                {
-                    Console.Write("You have already inserted this kind of number phone. Do you want to change? Y/N: ");
-                    string ToChange = Console.ReadLine();
-
-                    if (ToChange == "Y")
-                    {
-                        Console.WriteLine(" ");
-                        Console.Write("Please, type the number phone: ");
-                        string Phone = Console.ReadLine();
-
-                        OptionsPhone[KindPhone] = Phone;
-
-                        Console.WriteLine(" ");
-                        Console.WriteLine("Registry changed.");
-                    }
-                }
-                else
-                {
-                    Console.WriteLine(" ");
-                    Console.Write("Please, type the number phone: ");
-                    string Phone = Console.ReadLine();
-                    OptionsPhone.Add(KindPhone, Phone);
-                }
-                ExitMessage();
-            }
-
-            return OptionsPhone;
-        }
-
-        public Dictionary<char, string> ReturnCompletCount(Dictionary<char, string> OptionsPhone)
-        {
-            if (OptionsPhone.Count < 3)
-            {
-                string teste1 = "ABC";
-
-                for (int Position = 0; Position < teste1.Length; Position++)
-                {
-                    if (OptionsPhone.ContainsKey(teste1[Position]) == false)
-                    {
-                        OptionsPhone.Add(teste1[Position], "Null");
-                    }
-                }
-            }
-            return OptionsPhone;
-        }
 
         bool ExitContacts = false;
         string Choose = "0";
+        
         public void OptionsContacts(ManagementContacts AccessMC)
         {
             ReadFile(AccessMC);
@@ -178,20 +120,22 @@ namespace AddressBook
                     Console.Clear();
 
                     char KindPhone = ' ';
-                    Dictionary<char, string> OptionsPhone = new Dictionary<char, string>();
+
+                    Phones Phones = new Phones(""," "," ");
 
                     while (KindPhone != 'D')
                     {
-                        WriteOptionsPhone();
+
+                        Phones.WriteOptionsPhone();
 
                         string KindPhoneString = Console.ReadLine();
                         KindPhoneString = KindPhoneString.ToUpper();
                         KindPhone = Convert.ToChar(KindPhoneString);
 
-                        OptionsPhone = (ReadOptionsPhone(KindPhone, OptionsPhone));
+                        OptionsPhone = Phones.ReadOptionsPhone(KindPhone, OptionsPhone);
                     }
 
-                    ReturnCompletCount(OptionsPhone);
+                    Phones.ReturnCompletCount(OptionsPhone);
 
                     int NumberID = CalculateID(AccessMC);
 
