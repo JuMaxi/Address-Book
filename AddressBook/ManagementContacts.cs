@@ -17,6 +17,9 @@ namespace AddressBook
 
         public void ShowContacts()
         {
+            Menu Access = new Menu();
+            Access.WriteNameCompany();
+
             foreach (Contacts Line in AddContacts)
             {
                 Console.WriteLine("ID Number: " + Line.ID);

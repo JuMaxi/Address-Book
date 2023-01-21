@@ -40,7 +40,16 @@ namespace AddressBook
         }
         public int CalculateID(ManagementContacts Access)
         {
-            int LastID = (Access.AddContacts[Access.AddContacts.Count - 1].ID) + 1;
+            int LastID = 0;
+
+            if (Access.AddContacts.Count == 0)
+            {
+                LastID = (Access.AddContacts.Count) + 1;
+            }
+            else
+            {
+                LastID = (Access.AddContacts[Access.AddContacts.Count - 1].ID) + 1;
+            }
 
             return LastID;
         }
@@ -85,7 +94,7 @@ namespace AddressBook
             Console.WriteLine("What Kind of Phone do you want to insert? ");
             Console.WriteLine("A) Mobile Phone: ");
             Console.WriteLine("B) Home Phone: ");
-            Console.WriteLine("C) Bussness Phone: ");
+            Console.WriteLine("C) Business Phone: ");
             Console.WriteLine("D) Exit: ");
             Console.Write("--> ");
         }
@@ -174,7 +183,6 @@ namespace AddressBook
                     while (KindPhone != 'D')
                     {
                         WriteOptionsPhone();
-                        Console.WriteLine(" ");
 
                         string KindPhoneString = Console.ReadLine();
                         KindPhoneString = KindPhoneString.ToUpper();
@@ -197,7 +205,7 @@ namespace AddressBook
                         Console.WriteLine("Something is wrong. Check the error message: " + ex.Message);
                     }
 
-                    ExitMessage();
+                    Console.Clear();
                 }
                 if (Choose == "2")
                 {
