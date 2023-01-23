@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -27,9 +28,26 @@ namespace AddressBook
                 Console.WriteLine("Name: " + Line.Name);
                 Console.WriteLine("Address: " + Line.Address);
                 Console.WriteLine("Email: " + Line.Email.EmailAddress);
-                Console.WriteLine("Mobile Phone: " + Line.Phone.MobilePhone);
-                Console.WriteLine("Home Phone: " + Line.Phone.HomePhone);
-                Console.WriteLine("Company Phone: " + Line.Phone.BusinessPhone);
+                Console.WriteLine("Types of Phone: ");
+
+                for (int Position = 0; Position < Line.Phones.Count; Position++)
+                {
+                    if (Line.Phones[Position].Type == "1")
+                    {
+                        Console.WriteLine("Mobile Phone: " + Line.Phones[Position].Number + " ");
+                    }
+                    else
+                    {
+                        if (Line.Phones[Position].Type == "2")
+                        {
+                            Console.WriteLine("Home Phone: " + Line.Phones[Position].Number + " ");
+                        }
+                        else
+                        {
+                            Console.WriteLine("Business Phone: " + Line.Phones[Position].Number + " ");
+                        }
+                    }
+                }
                 Console.WriteLine(" ");
             }
         }

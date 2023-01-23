@@ -13,8 +13,6 @@ namespace AddressBook
 {
     public class Menu
     {
-        public Dictionary<char, string> OptionsPhone = new Dictionary<char, string>();
-
         public void WriteNameCompany()
         {
             Console.WriteLine("|-----------------------|");
@@ -68,8 +66,15 @@ namespace AddressBook
                 {
                     string[] BreakTxt = Line.Split(";");
                     int NumberID = Convert.ToInt32(BreakTxt[0]);
+                    List<Phones> OptionsPhone = new List<Phones>();
 
-                    Contacts AccessContacts = new Contacts(NumberID, BreakTxt[1], BreakTxt[2], BreakTxt[3], BreakTxt[4], BreakTxt[5], BreakTxt[6]);
+                    for (int Position = 4; Position < BreakTxt.Length - 1; Position = Position + 2)
+                    {
+                        Phones NewPhone = new Phones(BreakTxt[Position], BreakTxt[Position + 1]);
+                        OptionsPhone.Add(NewPhone);
+                    }
+
+                    Contacts AccessContacts = new Contacts(NumberID, BreakTxt[1], BreakTxt[2], BreakTxt[3], OptionsPhone);
 
                     AccessMC.AddNewContact(AccessContacts);
                 }
@@ -83,19 +88,30 @@ namespace AddressBook
 
             foreach (Contacts Line in WriteContact)
             {
-                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress + ";" + Line.Phone.MobilePhone + ";" + Line.Phone.HomePhone + ";" + Line.Phone.BusinessPhone);
-                WriteFile.Add(LineActual);
-            }
+                string LineActual = (Line.ID + ";" + Line.Name + ";" + Line.Address + ";" + Line.Email.EmailAddress);
+                string LinePhones = "";
+                string LineActualPhones = "";
 
+                for (int Position = 0; Position < Line.Phones.Count; Position++)
+                {
+                    LineActualPhones = (";" + (Line.Phones[Position].Type) + ";" + (Line.Phones[Position].Number));
+                    LinePhones = LinePhones + LineActualPhones;
+
+                }
+                WriteFile.Add(LineActual + LinePhones);
+            }
             File.WriteAllLines(Path, WriteFile);
         }
 
         bool ExitContacts = false;
         string Choose = "0";
-        
+
         public void OptionsContacts(ManagementContacts AccessMC)
         {
             ReadFile(AccessMC);
+
+            List<Phones> OptionsPhone = new List<Phones>();
+
 
             while (ExitContacts == false)
             {
@@ -119,30 +135,17 @@ namespace AddressBook
                     string Email = Console.ReadLine();
                     Console.Clear();
 
-                    char KindPhone = ' ';
+                    PhoneMenu PhoneMenu = new PhoneMenu();
 
-                    Phones Phones = new Phones(""," "," ");
-
-                    while (KindPhone != 'D')
-                    {
-
-                        Phones.WriteOptionsPhone();
-
-                        string KindPhoneString = Console.ReadLine();
-                        KindPhoneString = KindPhoneString.ToUpper();
-                        KindPhone = Convert.ToChar(KindPhoneString);
-
-                        OptionsPhone = Phones.ReadOptionsPhone(KindPhone, OptionsPhone);
-                    }
-
-                    Phones.ReturnCompletCount(OptionsPhone);
+                    OptionsPhone = PhoneMenu.ReadOptionsPhone();
 
                     int NumberID = CalculateID(AccessMC);
 
                     try
                     {
-                        Contacts AccessContacts = new Contacts(NumberID, Name, Address, Email, OptionsPhone['A'], OptionsPhone['B'], OptionsPhone['C']);
+                        Contacts AccessContacts = new Contacts(NumberID, Name, Address, Email, OptionsPhone);
                         AccessMC.AddNewContact(AccessContacts);
+
                     }
                     catch (Exception ex)
                     {
