@@ -18,7 +18,6 @@ namespace AddressBook
         {
             Email EmailValidate = new Email(EmailPerson);
             
-            
             ID = NumberID;
             Name = NamePerson;
             Address = AddressPerson;
